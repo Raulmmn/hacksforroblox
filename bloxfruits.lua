@@ -8,7 +8,7 @@ local playerName = localPlayer.Name
 local jogo = tostring(game.PlaceId)
 
 -- URL do seu servidor Flask no Replit (GRATUITO)
-local servidor = "https://workspace--rauldouradinhoc.replit.dev"
+local servidor = "https://witty-basilisk-eminent.ngrok-free.app/"
 
 -- Função que registra o jogador no servidor
 local function registrarJogador()
