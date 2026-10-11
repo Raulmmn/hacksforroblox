@@ -120,7 +120,7 @@ function TailwindUI.new(titleText, themeName)
     self.closeBtn = Instance.new("TextButton")
     self.closeBtn.Size = UDim2.new(0, 24, 0, 24)
     self.closeBtn.BackgroundColor3 = Color3.fromRGB(239, 68, 68)
-    self.closeBtn.Text = "✕"
+    self.closeBtn.Text = "X"
     self.closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
     self.closeBtn.TextSize = 11
     self.closeBtn.Font = Enum.Font.GothamBold
@@ -134,7 +134,7 @@ function TailwindUI.new(titleText, themeName)
     self.minimizeBtn = Instance.new("TextButton")
     self.minimizeBtn.Size = UDim2.new(0, 24, 0, 24)
     self.minimizeBtn.BackgroundColor3 = Color3.fromRGB(234, 179, 8)
-    self.minimizeBtn.Text = "🗕"
+    self.minimizeBtn.Text = "-"
     self.minimizeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
     self.minimizeBtn.TextSize = 10
     self.minimizeBtn.Font = Enum.Font.GothamBold
