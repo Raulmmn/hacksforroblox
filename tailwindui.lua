@@ -343,6 +343,14 @@ function TailwindUI:AddSession(sessionName)
         end)
     end
 
+    function builder:Clear()
+        for _, child in ipairs(sessionPage:GetChildren()) do
+            if not child:IsA("UIListLayout") and not child:IsA("UIPadding") then
+                child:Destroy()
+            end
+        end
+    end
+
     -- Nova Categoria: AddList (Dropdown customizável com suporte a exibição e parâmetros)
     function builder:AddList(title, items, callback)
         local frame = Instance.new("Frame")
