@@ -348,7 +348,7 @@ function TailwindUI:AddSession(sessionName)
         local frame = Instance.new("Frame")
         frame.Size = UDim2.new(0.92, 0, 0, 40)
         frame.BackgroundColor3 = Color3.fromRGB(40, 50, 70)
-        frame.ClipsDescendants = false
+        frame.ClipsDescendants = true -- Impede que elementos vazem para fora da caixa da base
         frame.Parent = sessionPage
         
         local fc = Instance.new("UICorner")
@@ -356,7 +356,7 @@ function TailwindUI:AddSession(sessionName)
         fc.Parent = frame
         
         local label = Instance.new("TextLabel")
-        label.Size = UDim2.new(0.5, -12, 1, 0)
+        label.Size = UDim2.new(0.5, -12, 0, 40)
         label.Position = UDim2.new(0, 12, 0, 0)
         label.BackgroundTransparency = 1
         label.Font = Enum.Font.Gotham
@@ -368,7 +368,7 @@ function TailwindUI:AddSession(sessionName)
         
         local dropdownBtn = Instance.new("TextButton")
         dropdownBtn.Size = UDim2.new(0, 140, 0, 28)
-        dropdownBtn.Position = UDim2.new(1, -148, 0.5, -14)
+        dropdownBtn.Position = UDim2.new(1, -148, 0, 6)
         dropdownBtn.BackgroundColor3 = Color3.fromRGB(51, 65, 85)
         dropdownBtn.Font = Enum.Font.GothamMedium
         
@@ -394,15 +394,15 @@ function TailwindUI:AddSession(sessionName)
         dbc.CornerRadius = UDim.new(0, 6)
         dbc.Parent = dropdownBtn
         
+        -- ScrollingFrame interno para a lista de itens não estourar a tela
         local listContainer = Instance.new("ScrollingFrame")
-        listContainer.Size = UDim2.new(1, 0, 0, 0)
-        listContainer.Position = UDim2.new(0, 0, 1, 4)
+        listContainer.Size = UDim2.new(1, -16, 0, 0)
+        listContainer.Position = UDim2.new(0, 8, 0, 44)
         listContainer.BackgroundColor3 = Color3.fromRGB(30, 41, 59)
         listContainer.BorderSizePixel = 0
         listContainer.Visible = false
         listContainer.ZIndex = 5
-        listContainer.CanvasSize = UDim2.new(0, 0, 0, 0)
-        listContainer.ScrollBarThickness = 2
+        listContainer.ScrollBarThickness = 4
         listContainer.Parent = frame
         
         local lclCorner = Instance.new("UICorner")
@@ -418,6 +418,10 @@ function TailwindUI:AddSession(sessionName)
         layoutList.FillDirection = Enum.FillDirection.Vertical
         layoutList.SortOrder = Enum.SortOrder.LayoutOrder
         layoutList.Parent = listContainer
+        
+        layoutList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+            listContainer.CanvasSize = UDim2.new(0, 0, 0, layoutList.AbsoluteContentSize.Y)
+        end)
         
         local isOpen = false
         
@@ -449,22 +453,28 @@ function TailwindUI:AddSession(sessionName)
                 dropdownBtn.Text = selectedDisplay .. " ▼"
                 isOpen = false
                 listContainer.Visible = false
+                
+                -- Retorna o frame principal ao tamanho original compactado
                 TweenService:Create(frame, TweenInfo.new(0.2), {Size = UDim2.new(0.92, 0, 0, 40)}):Play()
+                TweenService:Create(listContainer, TweenInfo.new(0.2), {Size = UDim2.new(1, -16, 0, 0)}):Play()
+                
                 if callback then
                     callback(selectedValue)
                 end
             end)
         end
         
-        listContainer.CanvasSize = UDim2.new(0, 0, 0, #items * 28)
-        
         dropdownBtn.MouseButton1Click:Connect(function()
             isOpen = not isOpen
             listContainer.Visible = isOpen
-            local targetListHeight = isOpen and math.min(#items * 28, 140) or 0
-            local targetFrameHeight = isOpen and (40 + targetListHeight + 8) or 40
             
-            TweenService:Create(listContainer, TweenInfo.new(0.2), {Size = UDim2.new(1, 0, 0, targetListHeight)}):Play()
+            -- Limita a altura máxima do dropdown para no máximo 140 pixels. Se tiver poucos itens, adapta-se ao tamanho real.
+            local conteudoAltura = layoutList.AbsoluteContentSize.Y
+            local targetListHeight = isOpen and math.min(conteudoAltura, 140) or 0
+            -- Calcula a altura total do card principal somando o cabeçalho (40) + altura da lista + margens de respiro (12)
+            local targetFrameHeight = isOpen and (40 + targetListHeight + 12) or 40
+            
+            TweenService:Create(listContainer, TweenInfo.new(0.2), {Size = UDim2.new(1, -16, 0, targetListHeight)}):Play()
             TweenService:Create(frame, TweenInfo.new(0.2), {Size = UDim2.new(0.92, 0, 0, targetFrameHeight)}):Play()
         end)
     end
