@@ -225,7 +225,7 @@ function TailwindUI:AddSession(sessionName)
     sessionPage.BackgroundTransparency = 1
     sessionPage.Visible = false
     sessionPage.CanvasSize = UDim2.new(0, 0, 0, 0)
-    sessionPage.AutomaticSize = Enum.AutomaticCanvasSize.Y
+    sessionPage.AutomaticSize = Enum.AutomaticSize.Y
     sessionPage.ScrollBarThickness = 2
     sessionPage.Parent = self.contentCard
     
