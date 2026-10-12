@@ -225,7 +225,7 @@ function TailwindUI:AddSession(sessionName)
     sessionPage.BackgroundTransparency = 1
     sessionPage.Visible = false
     sessionPage.CanvasSize = UDim2.new(0, 0, 0, 0)
-    sessionPage.AutomaticSize = Enum.AutomaticSize.Y -- Correção feita aqui!
+    -- (Remova qualquer linha de AutomaticSize ou AutomaticCanvasSize aqui)
     sessionPage.ScrollBarThickness = 2
     sessionPage.Parent = self.contentCard
     
@@ -234,6 +234,11 @@ function TailwindUI:AddSession(sessionName)
     layout.Padding = UDim.new(0, 8)
     layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
     layout.Parent = sessionPage
+    
+    -- ADICIONE ESTAS LINHAS AQUI:
+    layout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        sessionPage.CanvasSize = UDim2.new(0, 0, 0, layout.AbsoluteContentSize.Y + 20)
+    end)
     
     local padding = Instance.new("UIPadding")
     padding.PaddingTop = UDim.new(0, 10)
