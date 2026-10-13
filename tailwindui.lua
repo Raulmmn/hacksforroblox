@@ -352,7 +352,7 @@ function TailwindUI:AddSession(sessionName)
     end
 
     -- Nova Categoria: AddList (Dropdown customizável com suporte a exibição e parâmetros)
-    function builder:AddList(title, items, callback)
+    function builder:AddList(title, items, callback, buttonText)
         local frame = Instance.new("Frame")
         frame.Size = UDim2.new(0.92, 0, 0, 40)
         frame.BackgroundColor3 = Color3.fromRGB(40, 50, 70)
@@ -375,8 +375,8 @@ function TailwindUI:AddSession(sessionName)
         label.Parent = frame
         
         local dropdownBtn = Instance.new("TextButton")
-        dropdownBtn.Size = UDim2.new(0, 140, 0, 28)
-        dropdownBtn.Position = UDim2.new(1, -148, 0, 6)
+        dropdownBtn.Size = UDim2.new(0, 150, 0, 28)
+        dropdownBtn.Position = UDim2.new(1, -158, 0, 6)
         dropdownBtn.BackgroundColor3 = Color3.fromRGB(51, 65, 85)
         dropdownBtn.Font = Enum.Font.GothamMedium
         
@@ -393,7 +393,9 @@ function TailwindUI:AddSession(sessionName)
             end
         end
         
-        dropdownBtn.Text = selectedDisplay .. " ▼"
+        -- Se o parâmetro buttonText for fornecido, usa ele; caso contrário, usa o padrão com o item selecionado
+        local initialBtnText = buttonText or (selectedDisplay .. " ▼")
+        dropdownBtn.Text = initialBtnText
         dropdownBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
         dropdownBtn.TextSize = 12
         dropdownBtn.Parent = frame
@@ -476,10 +478,8 @@ function TailwindUI:AddSession(sessionName)
             isOpen = not isOpen
             listContainer.Visible = isOpen
             
-            -- Limita a altura máxima do dropdown para no máximo 140 pixels. Se tiver poucos itens, adapta-se ao tamanho real.
             local conteudoAltura = layoutList.AbsoluteContentSize.Y
             local targetListHeight = isOpen and math.min(conteudoAltura, 140) or 0
-            -- Calcula a altura total do card principal somando o cabeçalho (40) + altura da lista + margens de respiro (12)
             local targetFrameHeight = isOpen and (40 + targetListHeight + 12) or 40
             
             TweenService:Create(listContainer, TweenInfo.new(0.2), {Size = UDim2.new(1, -16, 0, targetListHeight)}):Play()
