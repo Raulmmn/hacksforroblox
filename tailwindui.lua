@@ -615,6 +615,27 @@ function TailwindUI:AddSession(sessionName)
             end
         end)
     end
+
+    function builder:Text(texto, alinhamento)
+        local label = Instance.new("TextLabel")
+        label.Size = UDim2.new(0.92, 0, 0, 24)
+        label.BackgroundTransparency = 1
+        label.Font = Enum.Font.Gotham
+        label.Text = texto or ""
+        label.TextColor3 = self.theme.subtext or Color3.fromRGB(148, 163, 184)
+        label.TextSize = 12
+        
+        -- Define o alinhamento do texto (padrão: Esquerda)
+        if alinhamento == "center" then
+            label.TextXAlignment = Enum.TextXAlignment.Center
+        elseif alinhamento == "right" then
+            label.TextXAlignment = Enum.TextXAlignment.Right
+        else
+            label.TextXAlignment = Enum.TextXAlignment.Left
+        end
+        
+        label.Parent = sessionPage
+    end
     
     return builder
 end
