@@ -527,6 +527,9 @@ function TailwindUI:AddSession(sessionName)
         end)
     end
 
+    local builder = {}
+    builder.theme = self.theme
+
     function builder:Notify(mensagem, tipo, duracao, comOuSemEmojis)
         tipo = tipo or "normal"
         duracao = duracao or 3
