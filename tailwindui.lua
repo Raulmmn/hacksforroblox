@@ -622,11 +622,8 @@ function TailwindUI:AddSession(sessionName)
         label.BackgroundTransparency = 1
         label.Font = Enum.Font.Gotham
         label.Text = texto or ""
-        
-        -- Proteção contra qualquer falha de escopo no self
-        local subColor = (self and self.theme and self.theme.subtext) or Color3.fromRGB(148, 163, 184)
-        label.TextColor3 = subColor
-        
+        -- Cor fixa estilo Slate 400 (combina com qualquer tema escuro ou claro)
+        label.TextColor3 = Color3.fromRGB(148, 163, 184)
         label.TextSize = 12
         
         if alinhamento == "center" then
@@ -636,9 +633,6 @@ function TailwindUI:AddSession(sessionName)
         else
             label.TextXAlignment = Enum.TextXAlignment.Left
         end
-        
-        label.Parent = sessionPage
-    end
     
     return builder
 end
