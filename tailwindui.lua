@@ -622,8 +622,11 @@ function TailwindUI:AddSession(sessionName)
         label.BackgroundTransparency = 1
         label.Font = Enum.Font.Gotham
         label.Text = texto or ""
-        -- Aqui o 'self' passa a funcionar perfeitamente com o uso de builder:Text
-        label.TextColor3 = self.theme.subtext or Color3.fromRGB(148, 163, 184)
+        
+        -- Proteção contra qualquer falha de escopo no self
+        local subColor = (self and self.theme and self.theme.subtext) or Color3.fromRGB(148, 163, 184)
+        label.TextColor3 = subColor
+        
         label.TextSize = 12
         
         if alinhamento == "center" then
