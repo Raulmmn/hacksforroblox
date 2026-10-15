@@ -636,6 +636,7 @@ function TailwindUI:AddSession(sessionName)
         else
             label.TextXAlignment = Enum.TextXAlignment.Left
         end
+    end
     
     return builder
 end
