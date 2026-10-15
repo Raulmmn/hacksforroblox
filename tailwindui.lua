@@ -206,6 +206,8 @@ function TailwindUI.new(titleText, themeName)
     return self
 end
 
+
+
 function TailwindUI:AddSession(sessionName)
     local tabBtn = Instance.new("TextButton")
     tabBtn.Size = UDim2.new(1, 0, 0, 32)
@@ -266,6 +268,8 @@ function TailwindUI:AddSession(sessionName)
     end)
     
     local builder = {}
+
+    setmetatable(builder, {__index = self})
     
     function builder:AddToggle(text, callback)
         local frame = Instance.new("Frame")
@@ -527,8 +531,7 @@ function TailwindUI:AddSession(sessionName)
         end)
     end
 
-    local builder = {}
-    setmetatable(builder, {__index = self})
+    
 
     function builder:Notify(mensagem, tipo, duracao, comOuSemEmojis)
         tipo = tipo or "normal"
