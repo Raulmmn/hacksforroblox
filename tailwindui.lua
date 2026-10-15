@@ -486,6 +486,135 @@ function TailwindUI:AddSession(sessionName)
             TweenService:Create(frame, TweenInfo.new(0.2), {Size = UDim2.new(0.92, 0, 0, targetFrameHeight)}):Play()
         end)
     end
+
+    function builder:AddInput(placeholderText, callback)
+        local frame = Instance.new("Frame")
+        frame.Size = UDim2.new(0.92, 0, 0, 40)
+        frame.BackgroundColor3 = Color3.fromRGB(40, 50, 70)
+        frame.Parent = sessionPage
+        
+        local fc = Instance.new("UICorner")
+        fc.CornerRadius = UDim.new(0, 6)
+        fc.Parent = frame
+        
+        local textBox = Instance.new("TextBox")
+        textBox.Size = UDim2.new(1, -24, 0, 28)
+        textBox.Position = UDim2.new(0, 12, 0, 6)
+        textBox.BackgroundColor3 = Color3.fromRGB(51, 65, 85)
+        textBox.Font = Enum.Font.Gotham
+        textBox.PlaceholderText = placeholderText or "Digite algo..."
+        textBox.Text = ""
+        textBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+        textBox.PlaceholderColor3 = Color3.fromRGB(148, 163, 184)
+        textBox.TextSize = 12
+        textBox.TextXAlignment = Enum.TextXAlignment.Left
+        textBox.Parent = frame
+        
+        local tbc = Instance.new("UICorner")
+        tbc.CornerRadius = UDim.new(0, 6)
+        tbc.Parent = textBox
+        
+        local padding = Instance.new("UIPadding")
+        padding.PaddingLeft = UDim.new(0, 8)
+        padding.PaddingRight = UDim.new(0, 8)
+        padding.Parent = textBox
+        
+        -- Evento disparado quando o usuário termina de digitar (pressiona Enter ou clica fora)
+        textBox.FocusLost:Connect(function(enterPressed)
+            if callback then
+                callback(textBox.Text, enterPressed)
+            end
+        end)
+    end
+
+    function builder:Notify(mensagem, tipo, duracao, comOuSemEmojis)
+        tipo = tipo or "normal"
+        duracao = duracao or 3
+        if comOuSemEmojis == nil then comOuSemEmojis = true end
+        
+        local corBg, corAcento, icone
+        if tipo == "aviso" then
+            corBg = Color3.fromRGB(50, 42, 25)
+            corAcento = Color3.fromRGB(234, 179, 8)
+            icone = "⚠️ "
+        elseif tipo == "erro" then
+            corBg = Color3.fromRGB(50, 30, 30)
+            corAcento = Color3.fromRGB(239, 68, 68)
+            icone = "❌ "
+        else -- normal
+            corBg = Color3.fromRGB(30, 41, 59)
+            corAcento = self.theme.accent or Color3.fromRGB(59, 130, 246)
+            icone = "ℹ️ "
+        end
+        
+        local textoFinal = (comOuSemEmojis and icone or "") .. tostring(mensagem)
+        
+        -- Container flutuante da notificação no canto inferior direito da janela principal
+        local toast = Instance.new("Frame")
+        toast.Size = UDim2.new(0, 260, 0, 44)
+        toast.Position = UDim2.new(1, 10, 1, -60) -- Inicia oculto à direita
+        toast.BackgroundColor3 = corBg
+        toast.BorderSizePixel = 0
+        toast.ZIndex = 10
+        toast.Parent = self.window
+        
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(0, 8)
+        corner.Parent = toast
+        
+        local stroke = Instance.new("UIStroke")
+        stroke.Color = corAcento
+        stroke.Thickness = 1.5
+        stroke.Parent = toast
+        
+        local textLabel = Instance.new("TextLabel")
+        textLabel.Size = UDim2.new(1, -20, 1, 0)
+        textLabel.Position = UDim2.new(0, 10, 0, 0)
+        textLabel.BackgroundTransparency = 1
+        textLabel.Font = Enum.Font.GothamMedium
+        textLabel.Text = textoFinal
+        textLabel.TextColor3 = Color3.fromRGB(240, 240, 240)
+        textLabel.TextSize = 12
+        textLabel.TextXAlignment = Enum.TextXAlignment.Left
+        textLabel.TextWrapped = true
+        textLabel.ZIndex = 11
+        textLabel.Parent = toast
+        
+        -- Animação de entrada (deslizando para dentro da tela)
+        TweenService:Create(toast, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {
+            Position = UDim2.new(1, -270, 1, -60)
+        }):Play()
+        
+        -- Barra de progresso temporal sutil na base do Toast
+        local progressBar = Instance.new("Frame")
+        progressBar.Size = UDim2.new(1, 0, 0, 3)
+        progressBar.Position = UDim2.new(0, 0, 1, -3)
+        progressBar.BackgroundColor3 = corAcento
+        progressBar.BorderSizePixel = 0
+        progressBar.ZIndex = 11
+        progressBar.Parent = toast
+        
+        local progCorner = Instance.new("UICorner")
+        progCorner.CornerRadius = UDim.new(0, 2)
+        progCorner.Parent = progressBar
+        
+        TweenService:Create(progressBar, TweenInfo.new(duracao, Enum.EasingStyle.Linear, Enum.EasingDirection.Out), {
+            Size = UDim2.new(0, 0, 0, 3)
+        }):Play()
+        
+        -- Auto-destruição e remoção segura após a duração definida
+        task.delay(duracao, function()
+            if toast and toast.Parent then
+                local twOut = TweenService:Create(toast, TweenInfo.new(0.25, Enum.EasingStyle.Quart, Enum.EasingDirection.In), {
+                    Position = UDim2.new(1, 10, 1, -60)
+                })
+                twOut:Play()
+                twOut.Completed:Connect(function()
+                    toast:Destroy()
+                end)
+            end
+        end)
+    end
     
     return builder
 end
