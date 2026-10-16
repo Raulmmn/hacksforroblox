@@ -1,3 +1,14 @@
+--[[
+  ______      _ __         _           ____  ______
+ /_  __/___ _(_) /      __(_)___  ____/ / / / /  _/
+  / / / __ `/ / / | /| / / / __ \/ __  / / / // /  
+ / / / /_/ / / /| |/ |/ / / / / / /_/ / /_/ // /   
+/_/  \__,_/_/_/ |__/|__/_/_/ /_/\__,_/\____/___/   
+                                                   ]]--
+-- Total credits to HChico
+
+-- Do not use without credits!
+
 local TweenService = game:GetService("TweenService")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
